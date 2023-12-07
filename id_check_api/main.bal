@@ -1,6 +1,5 @@
 import ballerina/http;
 import ballerina/io;
-import ballerina/log;
 import ballerina/sql;
 import ballerinax/postgresql;
 import ballerinax/postgresql.driver as _;
@@ -47,7 +46,6 @@ function checkNic(string nic) returns isValid {
                 valid: false,
                 nic: nic
             };
-        log:printInfo("Entered NIC  is Invalid: ");
         return result;
     } else {
         isValid result = {
