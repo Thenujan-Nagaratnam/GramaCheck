@@ -1,6 +1,6 @@
 [package]
 org = "thenujan"
-name = "id_check_api"
+name = "grama_check_integration"
 version = "0.1.0"
 distribution = "2201.8.4"
 

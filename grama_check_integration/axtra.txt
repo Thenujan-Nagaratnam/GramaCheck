@@ -1,0 +1,30 @@
+import ballerina/http;
+import ballerina/io;
+
+configurable string idApiClientID = ?;
+configurable string idApiClientSecret = ?;
+
+// http:Client httpClient = check new ("https://7902e7c7-f73b-401f-a1db-07c524deb30a-dev.e1-us-east-azure.choreoapis.dev/rkjj/id-check/endpoint-25416-e8a/v1.1");
+
+http:Client httpClient = check new ({auth: {clientId: idApiClientID, clientSecret: idApiClientSecret}});
+
+// IsValid getChecknicResponse = checkgramacheck_id_apiEndpoint->getChecknic(reqNic);
+
+public function main() returns error? {
+    // http:Response|error response = httpClient->get("/get?test=123");
+
+    json jsonBody = {
+        id: "12345679V",
+        name: "foo",
+        phone_bo: "1234567890",
+        address: "area 51"
+    };
+
+    http:Request request = new;
+
+    string|error response = httpClient->post("/nicCheck",
+        request.setPayload(jsonBody, "application/json")
+    );
+
+    io:println(response);
+}

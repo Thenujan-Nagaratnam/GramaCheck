@@ -41,7 +41,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "crypto"
-version = "2.5.0"
+version = "2.6.1"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "time"}
@@ -97,9 +97,6 @@ version = "1.6.0"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "lang.value"}
-]
-modules = [
-	{org = "ballerina", packageName = "io", moduleName = "io"}
 ]
 
 [[package]]
@@ -251,20 +248,6 @@ dependencies = [
 
 [[package]]
 org = "ballerina"
-name = "sql"
-version = "1.11.1"
-dependencies = [
-	{org = "ballerina", name = "io"},
-	{org = "ballerina", name = "jballerina.java"},
-	{org = "ballerina", name = "lang.object"},
-	{org = "ballerina", name = "time"}
-]
-modules = [
-	{org = "ballerina", packageName = "sql", moduleName = "sql"}
-]
-
-[[package]]
-org = "ballerina"
 name = "task"
 version = "2.5.0"
 dependencies = [
@@ -302,41 +285,41 @@ modules = [
 
 [[package]]
 org = "ballerinax"
-name = "postgresql"
-version = "1.11.0"
+name = "client.config"
+version = "1.0.1"
 dependencies = [
-	{org = "ballerina", name = "crypto"},
-	{org = "ballerina", name = "io"},
-	{org = "ballerina", name = "jballerina.java"},
-	{org = "ballerina", name = "sql"},
-	{org = "ballerina", name = "time"}
-]
-modules = [
-	{org = "ballerinax", packageName = "postgresql", moduleName = "postgresql"}
+	{org = "ballerina", name = "http"},
+	{org = "ballerina", name = "oauth2"}
 ]
 
 [[package]]
 org = "ballerinax"
-name = "postgresql.driver"
-version = "1.5.0"
+name = "twilio"
+version = "3.2.0"
+dependencies = [
+	{org = "ballerina", name = "auth"},
+	{org = "ballerina", name = "http"},
+	{org = "ballerina", name = "log"},
+	{org = "ballerina", name = "mime"},
+	{org = "ballerina", name = "os"},
+	{org = "ballerina", name = "url"},
+	{org = "ballerinax", name = "client.config"}
+]
 modules = [
-	{org = "ballerinax", packageName = "postgresql.driver", moduleName = "postgresql.driver"}
+	{org = "ballerinax", packageName = "twilio", moduleName = "twilio"}
 ]
 
 [[package]]
 org = "thenujan"
-name = "id_check_api"
+name = "twilioService"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
-	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "log"},
-	{org = "ballerina", name = "sql"},
 	{org = "ballerinai", name = "observe"},
-	{org = "ballerinax", name = "postgresql"},
-	{org = "ballerinax", name = "postgresql.driver"}
+	{org = "ballerinax", name = "twilio"}
 ]
 modules = [
-	{org = "thenujan", packageName = "id_check_api", moduleName = "id_check_api"}
+	{org = "thenujan", packageName = "twilioService", moduleName = "twilioService"}
 ]
 
