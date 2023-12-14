@@ -1,6 +1,6 @@
 import ballerina/http;
 import ballerina/io;
-import ballerina/sql;
+// import ballerina/sql;
 import ballerinax/postgresql.driver as _;
 
 public function main() {
@@ -43,8 +43,25 @@ service / on new http:Listener(3000) {
     resource function post getUser(@http:Payload Nic nic, http:Caller caller) returns error? {
         io:println("running: ", nic.nic);
         http:Response response = new;
-        error|sql:ExecutionResult result = check getUserDetails(nic.nic);
+        UserDetails result = check getUserDetails(nic.nic);
 
+        io:print("result: ", result);
+        response.statusCode = 200;
+
+        json respObj = {"result": result};
+
+        response.setHeader("Content-Type", "application/json");
+        response.setPayload(respObj);
+
+        check caller->respond(response.getJsonPayload());
+    }
+
+    resource function post getGramaDevisionUser(@http:Payload GramaDevision gramadevision, http:Caller caller) returns error? {
+        io:println("running: ", gramadevision.gramadevision);
+        http:Response response = new;
+        json[] result = check getGramaDevisionUsers(gramadevision.gramadevision);
+
+        io:print("result: ", result);
         response.statusCode = 200;
 
         json respObj = {"result": result};

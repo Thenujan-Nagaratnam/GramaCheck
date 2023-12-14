@@ -15,6 +15,10 @@ public type Nic record {|
     string nic;
 |};
 
+public type GramaDevision record {|
+    string gramadevision;
+|};
+
 public type StatusRecord record {|
     int id;
     string user_id;
@@ -26,8 +30,8 @@ public type StatusRecord record {|
 
 public type UserDetails record {|
     string name;
-    string nic;
+    string id;
     string address;
     string phone_no;
-    string grama_devision;
+    string gramadevision;
 |};

@@ -42,3 +42,15 @@ function dbQuery(sql:ParameterizedQuery query) returns stream<StatusRecord, sql:
 
     return result;
 };
+
+function dbQueryUser(sql:ParameterizedQuery query) returns stream<UserDetails, sql:Error?>|error {
+    postgresql:Client dbClient = check new (host, username, password,
+        db, port, connectionPool = {maxOpenConnections: 5}
+    );
+
+    stream<UserDetails, sql:Error?> result = dbClient->query(query);
+
+    check dbClient.close();
+
+    return result;
+};

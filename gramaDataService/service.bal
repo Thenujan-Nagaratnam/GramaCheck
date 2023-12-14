@@ -49,10 +49,38 @@ function getStatusHistory(string nic) returns json[]|error {
 
 }
 
-function getUserDetails(string nic) returns error|sql:ExecutionResult {
+function getUserDetails(string nic) returns UserDetails|error {
     sql:ParameterizedQuery query = `SELECT * from "user" where "id" = ${nic};`;
 
     sql:ExecutionResult|error result = check dbQueryRow(query);
+
+    //{"affectedRowCount":null,"lastInsertId":null,"phone_no":"1234567890","address":"123, Sample Street","name":"Alice","id":"123456789V"}
+    if (result is error) {
+        return result;
+    } else {
+        UserDetails userDetails = {
+            id: result["id"].toString(),
+            name: result["name"].toString(),
+            address: result["address"].toString(),
+            phone_no: result["phone_no"].toString(),
+            gramadevision: result["gramadevision"].toString()
+        };
+        return userDetails;
+    }
+}
+
+function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
+    sql:ParameterizedQuery query = `SELECT * from "user" where "gramadevision" = ${gramaDevision};`;
+
+    stream<UserDetails, sql:Error?> result = check dbQueryUser(query);
     io:println("result: ", result);
-    return result;
+
+    json[] userDetails = [];
+
+    check from UserDetails ent in result
+        do {
+            userDetails.push(ent);
+        };
+
+    return userDetails;
 }
