@@ -31,7 +31,7 @@ function dbExecute(sql:ParameterizedQuery query) returns error|sql:ExecutionResu
     return result;
 };
 
-function dbQuery(sql:ParameterizedQuery query) returns stream<StatusRecord, sql:Error?>|error {
+function dbQueryStatus(sql:ParameterizedQuery query) returns stream<StatusRecord, sql:Error?>|error {
     postgresql:Client dbClient = check new (host, username, password,
         db, port, connectionPool = {maxOpenConnections: 5}
     );

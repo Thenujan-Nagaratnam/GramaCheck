@@ -1,21 +1,6 @@
 import ballerina/io;
 import ballerina/sql;
 
-function checkAddress(User user) returns boolean|sql:Error? {
-
-    sql:ParameterizedQuery query = `SELECT "address" FROM "user" WHERE "id"=${user.nic};`;
-
-    sql:ExecutionResult|error result = dbQueryRow(query);
-    io:println(result);
-
-    if (result is error) {
-        return false;
-    } else {
-        return (string:toLowerAscii(result["address"].toString()) == string:toLowerAscii(user.address));
-    }
-
-}
-
 function updateStatus(StatusEntry entry) returns string|error {
     sql:ParameterizedQuery query = `INSERT INTO "status" ("user_id", "id_check_status", "address_check_status", "police_check_status")
 VALUES (${entry.nic}, ${entry.idCheckStatus}, ${entry.addressCheckStatus}, ${entry.policeCheckStatus});`;
@@ -33,9 +18,9 @@ VALUES (${entry.nic}, ${entry.idCheckStatus}, ${entry.addressCheckStatus}, ${ent
 }
 
 function getStatusHistory(string nic) returns json[]|error {
-    sql:ParameterizedQuery query = `SELECT * from "status" where "user_id" = ${nic};`;
+    sql:ParameterizedQuery query = `SELECT * from "status" where "user_id" = ${string:toLowerAscii(nic)} OR "user_id" = ${string:toUpperAscii(nic)};`;
 
-    stream<StatusRecord, sql:Error?> result = check dbQuery(query);
+    stream<StatusRecord, sql:Error?> result = check dbQueryStatus(query);
     io:println("result: ", result);
 
     json[] statusRecords = [];
@@ -50,7 +35,7 @@ function getStatusHistory(string nic) returns json[]|error {
 }
 
 function getUserDetails(string nic) returns UserDetails|error {
-    sql:ParameterizedQuery query = `SELECT * from "user" where "id" = ${nic};`;
+    sql:ParameterizedQuery query = `SELECT * from "user" where "id" = ${string:toLowerAscii(nic)} OR "id" = ${string:toUpperAscii(nic)};`;
 
     sql:ExecutionResult|error result = check dbQueryRow(query);
 
@@ -70,7 +55,7 @@ function getUserDetails(string nic) returns UserDetails|error {
 }
 
 function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
-    sql:ParameterizedQuery query = `SELECT * from "user" where "gramadevision" = ${gramaDevision};`;
+    sql:ParameterizedQuery query = `SELECT * from "user" where "gramadevision" = ${string:toLowerAscii(gramaDevision)} OR "gramadevision" = ${string:toUpperAscii(gramaDevision)};`;
 
     stream<UserDetails, sql:Error?> result = check dbQueryUser(query);
     io:println("result: ", result);
