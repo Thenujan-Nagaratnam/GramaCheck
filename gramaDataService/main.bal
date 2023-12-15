@@ -1,11 +1,6 @@
 import ballerina/http;
 import ballerina/io;
-// import ballerina/sql;
 import ballerinax/postgresql.driver as _;
-
-public function main() {
-
-}
 
 service / on new http:Listener(3000) {
 

@@ -3,7 +3,6 @@ public type StatusEntry record {|
     int policeCheckStatus;
     int idCheckStatus;
     int addressCheckStatus;
-
 |};
 
 public type Nic record {|
@@ -20,6 +19,7 @@ public type StatusRecord record {|
     int police_check_status;
     int id_check_status;
     int address_check_status;
+    string account_owner;
 
 |};
 

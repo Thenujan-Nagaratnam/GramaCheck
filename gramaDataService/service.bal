@@ -18,7 +18,7 @@ VALUES (${entry.nic}, ${entry.idCheckStatus}, ${entry.addressCheckStatus}, ${ent
 }
 
 function getStatusHistory(string nic) returns json[]|error {
-    sql:ParameterizedQuery query = `SELECT * from "status" where "user_id" = ${string:toLowerAscii(nic)} OR "user_id" = ${string:toUpperAscii(nic)};`;
+    sql:ParameterizedQuery query = `SELECT * from "status" where "account_owner" = ${string:toLowerAscii(nic)} OR "account_owner" = ${string:toUpperAscii(nic)};`;
 
     stream<StatusRecord, sql:Error?> result = check dbQueryStatus(query);
     io:println("result: ", result);
