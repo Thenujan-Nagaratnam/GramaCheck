@@ -18,7 +18,7 @@ VALUES (${entry.nic}, ${entry.idCheckStatus}, ${entry.addressCheckStatus}, ${ent
 }
 
 function getStatusHistory(string nic) returns json[]|error {
-    sql:ParameterizedQuery query = `SELECT * from "status" where "account_owner" = ${string:toLowerAscii(nic)} OR "account_owner" = ${string:toUpperAscii(nic)};`;
+    sql:ParameterizedQuery query = `SELECT * from "status" where LOWER(account_owner) = ${string:toLowerAscii(nic)};`;
 
     stream<StatusRecord, sql:Error?> result = check dbQueryStatus(query);
     io:println("result: ", result);
@@ -35,7 +35,7 @@ function getStatusHistory(string nic) returns json[]|error {
 }
 
 function getUserDetails(string nic) returns UserDetails|error {
-    sql:ParameterizedQuery query = `SELECT * from "user" where "id" = ${string:toLowerAscii(nic)} OR "id" = ${string:toUpperAscii(nic)};`;
+    sql:ParameterizedQuery query = `SELECT * from "user" where LOWER(id) = ${string:toLowerAscii(nic)};`;
 
     sql:ExecutionResult|error result = check dbQueryRow(query);
 
@@ -55,7 +55,7 @@ function getUserDetails(string nic) returns UserDetails|error {
 }
 
 function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
-    sql:ParameterizedQuery query = `SELECT * from "user" where "gramadevision" = ${string:toLowerAscii(gramaDevision)} OR "gramadevision" = ${string:toUpperAscii(gramaDevision)};`;
+    sql:ParameterizedQuery query = `SELECT * from "user" where LOWER(gramadevision) = ${string:toLowerAscii(gramaDevision)};`;
 
     stream<UserDetails, sql:Error?> result = check dbQueryUser(query);
     io:println("result: ", result);
