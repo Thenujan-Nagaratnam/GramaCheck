@@ -30,3 +30,13 @@ public type UserDetails record {|
     string phone_no;
     string gramadevision;
 |};
+
+public type StatusDetails record {|
+    string name;
+    string address;
+    string nicNumber;
+    string certificateNo;
+    int police_check_status;
+    int id_check_status;
+    int address_check_status;
+|};

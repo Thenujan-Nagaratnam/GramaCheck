@@ -55,17 +55,19 @@ function getUserDetails(string nic) returns UserDetails|error {
 }
 
 function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
-    sql:ParameterizedQuery query = `SELECT * from "user" where LOWER(gramadevision) = ${string:toLowerAscii(gramaDevision)};`;
+    sql:ParameterizedQuery query = `SELECT u.name, u.address, u.id as nicNumber, s.id as certificateNo, s.id_check_status, s.address_check_status, s.police_check_status FROM "user" u JOIN "status" s ON u.id = s.user_id WHERE LOWER(u.gramadevision) = ${string:toLowerAscii(gramaDevision)};`;
 
-    stream<UserDetails, sql:Error?> result = check dbQueryUser(query);
+    stream<StatusDetails, sql:Error?> result = check dbQueryUser(query);
     io:println("result: ", result);
 
-    json[] userDetails = [];
+    json[] statusDetails = [];
 
-    check from UserDetails ent in result
+    check from StatusDetails ent in result
         do {
-            userDetails.push(ent);
+            statusDetails.push(ent);
         };
 
-    return userDetails;
+    return statusDetails;
 }
+
+// SELECT u.name, u.address, u.id as user_id, s.id as status_id, s.id_check_status, s.address_check_status, s.police_check_status FROM "user" u JOIN "status" s ON u.id = s.user_id WHERE LOWER(u.gramadevision) = LOWER('Wellawatta');

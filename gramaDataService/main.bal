@@ -51,7 +51,7 @@ service / on new http:Listener(3000) {
         check caller->respond(response.getJsonPayload());
     }
 
-    resource function post getGramaDevisionUser(@http:Payload GramaDevision gramadevision, http:Caller caller) returns error? {
+    resource function post getGSApplication(@http:Payload GramaDevision gramadevision, http:Caller caller) returns error? {
         io:println("running: ", gramadevision.gramadevision);
         http:Response response = new;
         json[] result = check getGramaDevisionUsers(gramadevision.gramadevision);
