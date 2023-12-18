@@ -4,19 +4,7 @@ import ballerinax/slack;
 
 configurable string access_token = ?;
 
-type ErrorDetails record {|
-    time:Utc timeStamp;
-    string message;
-    string details;
-|};
-
-type NotificationError record {|
-    *http:BadRequest;
-    ErrorDetails body;
-|};
-
 slack:ConnectionConfig slackConfig = {
-    //access token got from slack
     auth: {
         token: access_token
     }
@@ -30,20 +18,20 @@ service / on new http:Listener(7070) {
 
     resource function post sendNotifications/[string message]() returns string|error|NotificationError {
 
-        //make the message
-        slack:Message messageParams = {
+        //The message
+        slack:Message messageToSend = {
             channelName: "gramacheck-project",
             text: message
         };
 
         // Post a message to a channel.
-        string|error postResponse = check slackClient->postMessage(messageParams);
+        string|error postResponse = check slackClient->postMessage(messageToSend);
 
         if postResponse is error {
 
-            ErrorDetails errorSendMsg = {timeStamp: time:utcNow(), message: "there is an error whike sending the message", details: string `reason for notification = ${message}`};
+            ErrorDetails errorMsg = {timeStamp: time:utcNow(), message: "there is an error whike sending the message", details: string `reason for notification = ${message}`};
             NotificationError notificationError = {
-                body: errorSendMsg
+                body: errorMsg
             };
             return notificationError;
 
