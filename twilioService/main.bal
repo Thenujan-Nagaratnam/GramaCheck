@@ -2,16 +2,12 @@ import ballerina/http;
 import ballerina/log;
 import ballerinax/twilio;
 
+# Configuration parameters for the Twilio account.
 configurable string accountSId = ?;
 configurable string authToken = ?;
 configurable string fromMobile = ?;
 
-type Message record {
-    string fromMobile;
-    string toMobile;
-    string message;
-};
-
+# Twilio connection configuration using the specified accountSId and authToken.
 twilio:ConnectionConfig twilioConfig = {
     twilioAuth: {
         accountSId: accountSId,
@@ -19,7 +15,18 @@ twilio:ConnectionConfig twilioConfig = {
     }
 };
 
+# HTTP service to handle Twilio-related functionalities.
 service /twilio on new http:Listener(6060) {
+
+    # Resource function to handle incoming SMS messages.
+    # This function sends an SMS using the Twilio client.
+    #
+    # + message - An HTTP payload containing the SMS message details.
+    #
+    # Returns an optional error if the SMS sending process fails.
+    #
+    # Example:
+    # post /twilio/sms { "message": "Hello, World!" }
     resource function post sms(@http:Payload Message message) returns error? {
         //Twilio Client
         twilio:Client twilioClient = check new (twilioConfig);
