@@ -28,12 +28,12 @@ service / on new http:Listener(7070) {
     #
     # Example:
     # post /sendNotifications/{"Hello, World!"}
-    resource function post sendNotifications/[string message]() returns string|error|NotificationError {
+    resource function post sendNotifications(@http:Payload Message message) returns string|error|NotificationError {
 
         //The message
         slack:Message messageToSend = {
             channelName: "gramacheck-project",
-            text: message
+            text: message.message
         };
 
         // Post a message to a channel.
@@ -41,7 +41,7 @@ service / on new http:Listener(7070) {
 
         if postResponse is error {
 
-            ErrorDetails errorMsg = {timeStamp: time:utcNow(), message: "there is an error whike sending the message", details: string `reason for notification = ${message}`};
+            ErrorDetails errorMsg = {timeStamp: time:utcNow(), message: "there is an error while sending the message", details: string `message sent by the user = ${message.message}`};
             NotificationError notificationError = {
                 body: errorMsg
             };
@@ -49,7 +49,7 @@ service / on new http:Listener(7070) {
 
         }
 
-        return "successfully sent the notification!";
+        return "Successfully sent the notification!";
 
     }
 }

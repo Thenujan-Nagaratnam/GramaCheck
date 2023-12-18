@@ -28,3 +28,15 @@ type NotificationError record {|
     *http:BadRequest;
     ErrorDetails body;
 |};
+
+
+# Represents an slack message with message content.
+# This record type is used to structure the data for sending slack messages.
+#
+# + message - The content of the SMS message.
+#
+# Example:
+# Message msg = {message: "Hello, World!"};
+type Message record {
+    string message;
+};
