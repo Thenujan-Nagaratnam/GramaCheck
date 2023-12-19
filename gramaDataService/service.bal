@@ -98,7 +98,7 @@ function getUserDetails(string nic) returns UserDetails|error {
 # + gramaDevision - The Grama Devision of the user
 # + return - The status of the applications in the Grama Devision
 function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
-    sql:ParameterizedQuery query = `SELECT u.name, u.address, u.id as nicNumber, s.id as certificateNo, s.id_check_status, s.address_check_status, s.police_check_status FROM "user" u JOIN "status" s ON u.id = s.user_id WHERE LOWER(u.gramadevision) = ${string:toLowerAscii(gramaDevision)};`;
+    sql:ParameterizedQuery query = `SELECT u.name, u.address, u.id as nicNumber, s.id as certificateNo, s.id_check_status, s.address_check_status, s.police_check_status FROM "user" u JOIN "status" s ON u.id = s.user_id WHERE LOWER(u.gramadevision) = ${string:toLowerAscii(gramaDevision)} ORDER BY certificateNo DESC;`;
 
     stream<StatusDetails, sql:Error?> result = check dbQueryUser(query);
     io:println("result: ", result);
