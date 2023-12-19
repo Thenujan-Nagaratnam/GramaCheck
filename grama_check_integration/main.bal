@@ -1,72 +1,51 @@
-// import ballerina/http;
-// import ballerina/io;
+import ballerina/http;
+import ballerina/io;
 
 // configurable string idApiClientID = ?;
 // configurable string idApiClientSecret = ?;
 
 // http:Client httpClient = check new ({auth: {clientId: idApiClientID, clientSecret: idApiClientSecret}});
-// IsValid getChecknicResponse = checkgramacheck_id_apiEndpoint->getChecknic(reqNic);
+
+type User record {
+    string nic;
+    string name;
+    string phone_no;
+    string address;
+};
 
 // public function main() returns error? {
-//     http:Client httpClient = check new ("https://cf3a4176-54c9-4547-bcd6-c6fe400ad0d8-dev.e1-us-east-azure.choreoapis.dev/gich/gramacheckidentitycheck/endpoint-25416-e8a/v1.0");
+//     http:Client httpClient = check new ("https://cf3a4176-54c9-4547-bcd6-c6fe400ad0d8-dev.e1-us-east-azure.choreoapis.dev/gich/gramacheckidentitycheck/endpoint-25416-e8a/v1.0/nicCheck");
+//     // http:Client resourceClient = check new ("https://cf3a4176-54c9-4547-bcd6-c6fe400ad0d8-dev.e1-us-east-azure.choreoapis.dev/gich/gramacheckidentitycheck/endpoint-25416-e8a/v1.0");
 //     io:println("http client created");
-//     string response = check httpClient->post("/nicCheck",
-//         {
-//             id: "123456789V",
-//             name: "foo",
-//             phone_no: "123456795",
-//             address: "area 51"
-//         }
-//     );
+//     http:Response response = check httpClient->post("", {id: "123456789V", name: "foo", phone_no: "123456795", address: "area 51"});
 // }
 
-// // import ballerina/http;
-// // import ballerina/io;
-// // public function main() {
-// //     http:Client client = new;
-// //     http:Request request = new;
-// //     request.url = "API_ENDPOINT";
-// //     request.method = http:POST;
-// //     request.setHeader("Content-Type", "application/json");
-// //     request.setPayload({"nic": "123456789V"});
-// //     var response = client->send(request);
-// //     io:println(response.getJsonPayload());
-// // }
-// // import ballerina/http;
+service / on new http:Listener(9090) {
 
-// // // Types
-// // type isValid record {
-// //     boolean valid;
-// //     string nic;
-// // };
+    resource function post sms(@http:Payload User user) returns error? {
 
-// // type NicCheckRequest record {
-// //     string nic;
-// // };
+        /////////////////////////////////////ID VALIDATION API/////////////////////////////////////
 
-// // // NIC Validation Service Endpoint URL
-// // string nicValidationServiceURL = "http://localhost:25416/nicCheck";
+        http:Client gramacheck_id_apiEndpoint = check new ("https://cf3a4176-54c9-4547-bcd6-c6fe400ad0d8-dev.e1-us-east-azure.choreoapis.dev/gich/gramacheckidentitycheck/endpoint-25416-e8a/v1.0/");
 
-// // public function main() returns error? {
-// //     // Example NIC to check
-// //     string sampleNIC = "123456789V";
+        http:Response response = check gramacheck_id_apiEndpoint->post("nicCheck", {nic: user.nic});
 
-// //     // Create a NIC Check request payload
-// //     NicCheckRequest nicCheckRequest = {nic: sampleNIC};
+        io:print("response: ", response.getJsonPayload());
 
-// //     // Call the NIC validation service
-// //     isValid|http:Error response = check nicValidationServiceURL    post nicCheckRequest;
+        // IsValid getChecknicResponse = check gramacheck_id_apiEndpoint->getChecknic(reqNic);
 
-// //     // Handle the response
-// //     if (response is isValid) {
-// //         // Valid NIC
-// //         io:println("NIC is valid!");
-// //     } else {
-// //         // Error occurred
-// //         io:println("Error validating NIC: ", response);
-// //     }
+        /////////////////////////////////////ADDRESS VALIDATION API/////////////////////////////////////
+        http:Client addresscheckEndpoint = check new ("https://cf3a4176-54c9-4547-bcd6-c6fe400ad0d8-dev.e1-us-east-azure.choreoapis.dev/gich/address-check/endpoint-3000-197/v1.0/addressCheck");
 
-// //     // Exit gracefully
-// //     checkpanic ?;
-// // }
+        http:Response getCheckaddressResponse = check addresscheckEndpoint->post("", {nic: user.nic, address: user.address});
 
+        io:print("response: ", getCheckaddressResponse);
+
+        /////////////////////////////////////POLICE VALIDATION API/////////////////////////////////////
+        http:Client police_check_api_pvEndpoint = check new ("https://cf3a4176-54c9-4547-bcd6-c6fe400ad0d8-dev.e1-us-east-azure.choreoapis.dev/gich/policecheckapi-pvm/police-check-df5/v1.0/check_status");
+
+        http:Response getPersonCrimeRecordsResponse = check police_check_api_pvEndpoint->post("", {nic: user.nic});
+
+        io:print("response: ", getPersonCrimeRecordsResponse);
+    }
+}

@@ -46,7 +46,6 @@ service / on new http:Listener(7070) {
                 body: errorMsg
             };
             return notificationError;
-
         }
 
         return "Successfully sent the notification!";

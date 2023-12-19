@@ -1,9 +1,9 @@
 import ballerina/io;
 import ballerina/sql;
 
-# Update the Status of the Certificate
+# Insert the Status of the Certificate
 # This is implemented for the Grama Niladhari to decide whether the certificate is approved or not
-# 
+#
 # + entry - The StatusEntry object which contains the status of the certificate
 # + return - The status of the update operation
 function updateStatus(StatusEntry entry) returns string|error {
@@ -22,9 +22,29 @@ VALUES (${string:toUpperAscii(entry.nic)}, ${entry.idCheckStatus}, ${entry.addre
 
 }
 
+# Update the Status of the Certificate
+# This is implemented for the Grama Niladhari to decide whether the certificate is approved or not
+#
+# + entry - The StatusEntry object which contains the status of the certificate
+# + return - The status of the update operation
+function updateStatusEntry(StatusEntry entry) returns string|error {
+    sql:ParameterizedQuery query = `UPDATE "status" SET id_check_status = ${entry.idCheckStatus}, address_check_status = ${entry.addressCheckStatus}, police_check_status = ${entry.policeCheckStatus}, account_owner = ${string:toUpperAscii(entry.accountOwner)} WHERE id = ( SELECT id FROM "status" WHERE user_id = ${string:toUpperAscii(entry.nic)} ORDER BY id DESC LIMIT 1 );`;
+
+    io:println("query : ", query);
+    sql:ExecutionResult|error result = dbExecute(query);
+    io:println("result: ", result);
+
+    if (result is error) {
+        return result;
+    } else {
+        return "Successfully updated!";
+    }
+
+}
+
 # Get the Status History of the Certificate Application
 # This is implemented for the user to get the history of the certificate applications
-# 
+#
 # + nic - The NIC number of the user
 # + return - The status of the certificate application
 function getStatusHistory(string nic) returns json[]|error {
@@ -45,7 +65,7 @@ function getStatusHistory(string nic) returns json[]|error {
 }
 
 # Get the Profile Details of the User
-# 
+#
 # + nic - The NIC number of the user
 # + return - The profile details of the user
 function getUserDetails(string nic) returns UserDetails|error {
@@ -70,7 +90,7 @@ function getUserDetails(string nic) returns UserDetails|error {
 
 # Get the Status of the applications in a Grama Devision
 # This is implemented for the Grama Niladhari to get the status of the applications in a Grama Devision
-# 
+#
 # + gramaDevision - The Grama Devision of the user
 # + return - The status of the applications in the Grama Devision
 function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
