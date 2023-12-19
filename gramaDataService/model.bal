@@ -13,6 +13,12 @@ public type StatusEntry record {|
     string accountOwner;
 |};
 
+# Description.
+#
+# + id - id of the requested certificate
+# + policeCheckStatus - status of the police check  
+# + idCheckStatus - status of the identity check  
+# + addressCheckStatus - status of the address check
 public type UpdateStatusEntry record {|
     int id;
     int policeCheckStatus;

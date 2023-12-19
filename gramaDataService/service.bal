@@ -53,7 +53,7 @@ function updateStatusEntry(UpdateStatusEntry entry) returns string|error {
 # + nic - The NIC number of the user
 # + return - The status of the certificate application
 function getStatusHistory(string nic) returns json[]|error {
-    sql:ParameterizedQuery query = `SELECT * from "status" where LOWER(account_owner) = ${string:toLowerAscii(nic)};`;
+    sql:ParameterizedQuery query = `SELECT * from "status" where LOWER(account_owner) = ${string:toLowerAscii(nic)} ORDER BY id DESC;`;
 
     stream<StatusRecord, sql:Error?> result = check dbQueryStatus(query);
     io:println("result: ", result);
