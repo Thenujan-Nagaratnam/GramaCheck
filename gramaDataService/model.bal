@@ -6,7 +6,7 @@
 # + addressCheckStatus - status of the address check
 # + accountOwner - nic of the applicant
 public type StatusEntry record {|
-    string nic;
+    string|int nic;
     int policeCheckStatus;
     int idCheckStatus;
     int addressCheckStatus;
