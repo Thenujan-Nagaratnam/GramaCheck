@@ -37,7 +37,11 @@ function updateStatusEntry(StatusEntry entry) returns string|error {
     if (result is error) {
         return result;
     } else {
-        return "Successfully updated!";
+        if (result.affectedRowCount == 0) {
+            return "No records found!";
+        } else {
+            return "Successfully updated!";
+        }
     }
 
 }
