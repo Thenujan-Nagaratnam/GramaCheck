@@ -8,7 +8,7 @@ import ballerina/sql;
 # + return - The status of the update operation
 function updateStatus(StatusEntry entry) returns string|error {
     sql:ParameterizedQuery query = `INSERT INTO "status" ("user_id", "id_check_status", "address_check_status", "police_check_status", "account_owner")
-VALUES (${string:toUpperAscii(entry.nic.toBalString())}, ${entry.idCheckStatus}, ${entry.addressCheckStatus}, ${entry.policeCheckStatus}, ${string:toUpperAscii(entry.accountOwner.toBalString())});`;
+VALUES (${string:toUpperAscii(entry.nic)}, ${entry.idCheckStatus}, ${entry.addressCheckStatus}, ${entry.policeCheckStatus}, ${string:toUpperAscii(entry.accountOwner)});`;
 
     io:println("query : ", query);
     sql:ExecutionResult|error result = dbExecute(query);
