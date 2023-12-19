@@ -1,6 +1,11 @@
 import ballerina/io;
 import ballerina/sql;
 
+# Update the Status of the Certificate
+# This is implemented for the Grama Niladhari to decide whether the certificate is approved or not
+# 
+# + entry - The StatusEntry object which contains the status of the certificate
+# + return - The status of the update operation
 function updateStatus(StatusEntry entry) returns string|error {
     sql:ParameterizedQuery query = `INSERT INTO "status" ("user_id", "id_check_status", "address_check_status", "police_check_status", "account_owner")
 VALUES (${string:toUpperAscii(entry.nic)}, ${entry.idCheckStatus}, ${entry.addressCheckStatus}, ${entry.policeCheckStatus}, ${string:toUpperAscii(entry.accountOwner)});`;
@@ -17,6 +22,11 @@ VALUES (${string:toUpperAscii(entry.nic)}, ${entry.idCheckStatus}, ${entry.addre
 
 }
 
+# Get the Status History of the Certificate Application
+# This is implemented for the user to get the history of the certificate applications
+# 
+# + nic - The NIC number of the user
+# + return - The status of the certificate application
 function getStatusHistory(string nic) returns json[]|error {
     sql:ParameterizedQuery query = `SELECT * from "status" where LOWER(account_owner) = ${string:toLowerAscii(nic)};`;
 
@@ -34,6 +44,10 @@ function getStatusHistory(string nic) returns json[]|error {
 
 }
 
+# Get the Profile Details of the User
+# 
+# + nic - The NIC number of the user
+# + return - The profile details of the user
 function getUserDetails(string nic) returns UserDetails|error {
     sql:ParameterizedQuery query = `SELECT * from "user" where LOWER(id) = ${string:toLowerAscii(nic)};`;
 
@@ -54,6 +68,11 @@ function getUserDetails(string nic) returns UserDetails|error {
     }
 }
 
+# Get the Status of the applications in a Grama Devision
+# This is implemented for the Grama Niladhari to get the status of the applications in a Grama Devision
+# 
+# + gramaDevision - The Grama Devision of the user
+# + return - The status of the applications in the Grama Devision
 function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
     sql:ParameterizedQuery query = `SELECT u.name, u.address, u.id as nicNumber, s.id as certificateNo, s.id_check_status, s.address_check_status, s.police_check_status FROM "user" u JOIN "status" s ON u.id = s.user_id WHERE LOWER(u.gramadevision) = ${string:toLowerAscii(gramaDevision)};`;
 
