@@ -27,8 +27,8 @@ VALUES (${string:toUpperAscii(entry.nic)}, ${entry.idCheckStatus}, ${entry.addre
 #
 # + entry - The StatusEntry object which contains the status of the certificate
 # + return - The status of the update operation
-function updateStatusEntry(StatusEntry entry) returns string|error {
-    sql:ParameterizedQuery query = `UPDATE "status" SET id_check_status = ${entry.idCheckStatus}, address_check_status = ${entry.addressCheckStatus}, police_check_status = ${entry.policeCheckStatus}, account_owner = ${string:toUpperAscii(entry.accountOwner)} WHERE id = ( SELECT id FROM "status" WHERE user_id = ${string:toUpperAscii(entry.nic)} ORDER BY id DESC LIMIT 1 );`;
+function updateStatusEntry(UpdateStatusEntry entry) returns string|error {
+    sql:ParameterizedQuery query = `UPDATE "status" SET id_check_status = ${entry.idCheckStatus}, address_check_status = ${entry.addressCheckStatus}, police_check_status = ${entry.policeCheckStatus} WHERE id = ${entry.id};`;
 
     io:println("query : ", query);
     sql:ExecutionResult|error result = dbExecute(query);

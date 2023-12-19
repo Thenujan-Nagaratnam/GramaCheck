@@ -31,7 +31,7 @@ service / on new http:Listener(3000) {
     # + entry - StatusEntry object, which contains the information of the previous status
     # + caller - The caller of the service
     # + return - Error if any
-    resource function post updateStatusEntry(@http:Payload StatusEntry entry, http:Caller caller) returns error? {
+    resource function post updateStatusEntry(@http:Payload UpdateStatusEntry entry, http:Caller caller) returns error? {
         http:Response response = new;
         string|error res = updateStatusEntry(entry);
 

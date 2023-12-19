@@ -13,6 +13,13 @@ public type StatusEntry record {|
     string accountOwner;
 |};
 
+public type UpdateStatusEntry record {|
+    int id;
+    int policeCheckStatus;
+    int idCheckStatus;
+    int addressCheckStatus;
+|};
+
 # Description.
 #
 # + nic - nic of the user
@@ -29,7 +36,7 @@ public type GramaDevision record {|
 
 # Description.
 #
-# + id -  id of the user 
+# + id - id of the user 
 # + user_id - id of the user who requested the certificate 
 # + police_check_status - status of the police check
 # + id_check_status - status of the identity check
