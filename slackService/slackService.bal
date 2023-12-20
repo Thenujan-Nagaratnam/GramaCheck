@@ -33,7 +33,7 @@ service / on new http:Listener(7070) {
         //The message
         slack:Message messageToSend = {
             channelName: "gramacheck-project",
-            text: message.message
+            text: string `Sent by ${message.nic}, Message = ${message.message}`
         };
 
         // Post a message to a channel.

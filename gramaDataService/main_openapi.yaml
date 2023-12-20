@@ -1,0 +1,216 @@
+openapi: 3.0.1
+info:
+  title: Main Openapi Yaml
+  version: 0.1.0
+servers:
+- url: "{server}:{port}/"
+  variables:
+    server:
+      default: http://localhost
+    port:
+      default: "3000"
+paths:
+  /updateStatus:
+    post:
+      summary: |-
+        Service for inserting the Application Status of the user
+        This service will be called by the Grama Niladhari
+      operationId: postUpdatestatus
+      requestBody:
+        description: "StatusEntry object, which contains the information of the previous\
+          \ status"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusEntry'
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: BadRequest
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /updateStatusEntry:
+    post:
+      summary: |-
+        Service for updating the Application Status of the user
+        This service will be called by the Grama Niladhari
+      operationId: postUpdatestatusentry
+      requestBody:
+        description: "StatusEntry object, which contains the information of the previous\
+          \ status"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStatusEntry'
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: BadRequest
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /getStatus:
+    post:
+      summary: |-
+        Service for getting the status history of the user
+        This service will be called by the Citizens
+      operationId: postGetstatus
+      requestBody:
+        description: NIC number of the user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Nic'
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: BadRequest
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /getUser:
+    post:
+      summary: |-
+        Service for getting the profile details of the user
+        This service will be called by the Citizens
+      operationId: postGetuser
+      requestBody:
+        description: NIC number of the user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Nic'
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: BadRequest
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /getGSApplication:
+    post:
+      summary: |-
+        Service for getting all the applications for the given Grama Niladhari Division
+        This service will be called by the Grama Niladhari
+      operationId: postGetgsapplication
+      requestBody:
+        description: Grama Niladhari Division
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GramaDevision'
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: BadRequest
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+components:
+  schemas:
+    StatusEntry:
+      required:
+      - accountOwner
+      - addressCheckStatus
+      - idCheckStatus
+      - nic
+      - policeCheckStatus
+      type: object
+      properties:
+        nic:
+          oneOf:
+          - type: string
+          - type: integer
+            format: int64
+        policeCheckStatus:
+          type: integer
+          format: int64
+        idCheckStatus:
+          type: integer
+          format: int64
+        addressCheckStatus:
+          type: integer
+          format: int64
+        accountOwner:
+          type: string
+      description: Description.
+    ErrorPayload:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: Reason phrase
+        path:
+          type: string
+          description: Request path
+        method:
+          type: string
+          description: Method type of the request
+        message:
+          type: string
+          description: Error message
+        timestamp:
+          type: string
+          description: Timestamp of the error
+        status:
+          type: integer
+          description: Relevant HTTP status code
+          format: int32
+    UpdateStatusEntry:
+      required:
+      - addressCheckStatus
+      - id
+      - idCheckStatus
+      - policeCheckStatus
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        policeCheckStatus:
+          type: integer
+          format: int64
+        idCheckStatus:
+          type: integer
+          format: int64
+        addressCheckStatus:
+          type: integer
+          format: int64
+      description: Description.
+    Nic:
+      required:
+      - nic
+      type: object
+      properties:
+        nic:
+          type: string
+      description: Description.
+    GramaDevision:
+      required:
+      - gramadevision
+      type: object
+      properties:
+        gramadevision:
+          type: string
+      description: Description.

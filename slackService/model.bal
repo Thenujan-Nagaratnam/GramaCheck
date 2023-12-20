@@ -37,4 +37,5 @@ type NotificationError record {|
 # Message msg = {message: "Hello, World!"};
 type Message record {
     string message;
+    string nic;
 };
