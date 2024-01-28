@@ -30,11 +30,12 @@ service /twilio on new http:Listener(6060) {
     resource function post sms(@http:Payload Message message) returns error? {
         //Twilio Client
         twilio:Client twilioClient = check new (twilioConfig);
-        twilio:SmsResponse response = check twilioClient->sendSms(fromMobile, "+94776497738", message.message);
+        twilio:SmsResponse response = check twilioClient->sendSms(fromMobile, "+94774581440", message.message);
 
         log:printInfo("SMS_SID: " + response.sid.toString() + ", Body: " + response.body.toString());
     }
 }
+
 
 // import ballerina/log;
 // import ballerinax/twilio;
