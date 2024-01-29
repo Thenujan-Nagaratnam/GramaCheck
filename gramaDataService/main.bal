@@ -39,7 +39,7 @@ service / on new http:Listener(3000) {
             response.statusCode = 200;
             response.setPayload({status: "Error", description: "Something went wrong! please try again after some time"});
         } else {
-            response.statusCode = 201;
+            response.statusCode = 200;
             response.setPayload({status: "Success", description: res});
         }
 

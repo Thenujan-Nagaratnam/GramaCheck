@@ -66,7 +66,6 @@ function getStatusHistory(string nic) returns json[]|error {
         };
 
     return statusRecords;
-
 }
 
 # Get the Profile Details of the User
@@ -85,9 +84,9 @@ function getUserDetails(string nic) returns UserDetails|error {
         UserDetails userDetails = {
             id: result["id"].toString(),
             name: result["name"].toString(),
-            address: result["address"].toString(),
-            phone_no: result["phone_no"].toString(),
-            gramadevision: result["gramadevision"].toString()
+            address: result["land_id"].toString(),
+            phone_no: result["phone_no"].toString()
+            // gramadevision: result["gramadevision"].toString()
         };
         return userDetails;
     }
@@ -99,9 +98,14 @@ function getUserDetails(string nic) returns UserDetails|error {
 # + gramaDevision - The Grama Devision of the user
 # + return - The status of the applications in the Grama Devision
 function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
-    sql:ParameterizedQuery query = `SELECT u.name, u.address, u.id as nicNumber, s.id as certificateNo, s.id_check_status, s.address_check_status, s.police_check_status FROM "user" u JOIN "status" s ON u.id = s.user_id WHERE LOWER(u.gramadevision) = ${string:toLowerAscii(gramaDevision)} ORDER BY certificateNo DESC;`;
+    // sql:ParameterizedQuery query = `SELECT u.name, u.land_id, u.id as nicNumber, s.id as certificateNo, s.id_check_status, s.address_check_status, s.police_check_status FROM "user" u JOIN "status" s ON u.id = s.user_id WHERE LOWER(u.gramadevision) = ${string:toLowerAscii(gramaDevision)} ORDER BY certificateNo DESC;`;
+
+    // sql:ParameterizedQuery query = `SELECT u.name, u.land_id, u.id as nicNumber, s.id as certificateNo, s.id_check_status, s.address_check_status, s.police_check_status (SELECT * FROM "user" u JOIN "address" a ON u.land_id = a.land_id) WHERE LOWER(u.land_id) = ${string:toLowerAscii(gramaDevision)};`;
+
+    sql:ParameterizedQuery query = `SELECT r.name as name, r.land_id as address, r.nicNumber as nicNumber, s.id as certificateNo, s.id_check_status, s.address_check_status, s.police_check_status FROM (SELECT u.name as name, u.id as nicNumber, a.land_id as land_id, a.grama_division_no as gramadevision FROM "user" u JOIN "address" a ON u.land_id = a.land_id) r JOIN "status" s ON r.nicNumber = s.user_id WHERE LOWER(r.gramadevision) = ${string:toLowerAscii(gramaDevision)} ORDER BY s.id DESC;`;
 
     stream<StatusDetails, sql:Error?> result = check dbQueryUser(query);
+
     io:println("result: ", result);
 
     json[] statusDetails = [];
@@ -110,6 +114,8 @@ function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
         do {
             statusDetails.push(ent);
         };
+    
+    // io:print(statusDetails);
 
     return statusDetails;
 }

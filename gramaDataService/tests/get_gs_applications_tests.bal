@@ -11,7 +11,7 @@ function before_get_gs_application_test() {
 @test:Config { groups: ["get_gs_application"] }
 function testServicegetGramaDevisionWithValidPayload() returns error? {
     json payload = {
-        "gramadevision": "Kollupitiya"
+        "gramadevision": "2c"
     };
     http:Response response = check testClient->post("/getGSApplication", payload);
     test:assertEquals(response.statusCode, 200);
@@ -19,11 +19,11 @@ function testServicegetGramaDevisionWithValidPayload() returns error? {
     json expected = {
         "result": [
             {
-                "name": "Bob",
-                "id": "987654321V",
-                "address": "456, Example Avenue",
-                "phone_no": "9876543210",
-                "gramadevision": "Kollupitiya"
+                "name": "Alice",
+                "id": "123456789V",
+                "address": "1",
+                "phone_no": "1234567890",
+                "gramadevision": "2C"
             }
         ]
     };

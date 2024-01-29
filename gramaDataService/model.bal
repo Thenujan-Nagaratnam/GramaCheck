@@ -70,7 +70,6 @@ public type UserDetails record {|
     string id;
     string address;
     string phone_no;
-    string gramadevision;
 |};
 
 # Description.

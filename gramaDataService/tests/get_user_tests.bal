@@ -13,7 +13,7 @@ function testServiceWithValidNIC() returns error? {
     http:Response response = check testClient->post("/getUser", payload);
     test:assertEquals(response.statusCode, 200);
     json result = check response.getJsonPayload();
-    json expected = {"result": {"name": "Alice", "id": "123456789V", "address": "123, Sample Street", "phone_no": "1234567890", "gramadevision": "Bambalapitiya"}};
+    json expected = {"result": {"name": "Alice", "id": "123456789V", "address": "1", "phone_no": "1234567890", "gramadevision": "2C"}};
     test:assertEquals(result, expected);
 }
 
