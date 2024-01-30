@@ -95,7 +95,7 @@ function getUserDetails(string nic) returns UserDetails|error {
             name: result["name"].toString(),
             address: result["address"].toString(),
             phone_no: result["phone_no"].toString(),
-            grama_division_no: result["grama_division_no"].toString()
+            gramadevision: result["grama_division_no"].toString()
         };
         return userDetails;
     }
