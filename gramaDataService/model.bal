@@ -81,7 +81,18 @@ public type UserDetails record {|
 # + police_check_status - status of the police check
 # + id_check_status - status of the identity check
 # + address_check_status - status of the address check
-public type StatusDetails record {|
+public type StatusDetails1 record {|
+    string name;
+    string land_id;
+    string street_name;
+    string nicNumber;
+    string certificateNo;
+    int police_check_status;
+    int id_check_status;
+    int address_check_status;
+|};
+
+public type StatusDetails2 record {|
     string name;
     string address;
     string nicNumber;

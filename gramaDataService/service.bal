@@ -73,7 +73,15 @@ function getStatusHistory(string nic) returns json[]|error {
 # + nic - The NIC number of the user
 # + return - The profile details of the user
 function getUserDetails(string nic) returns UserDetails|error {
-    sql:ParameterizedQuery query = `SELECT * from "user" where LOWER(id) = ${string:toLowerAscii(nic)};`;
+    // sql:ParameterizedQuery query = `SELECT * from "user" where LOWER(id) = ${string:toLowerAscii(nic)};`;
+
+    sql:ParameterizedQuery query = `SELECT u.id,
+                                            u.name,
+                                            u.phone_no, 
+                                            CONCAT(a.land_no, ' ', a.street_name) as address
+                                        FROM "user" u
+                                        JOIN "address" a ON u.land_id = a.land_id
+                                        WHERE LOWER(u.id) = ${string:toLowerAscii(nic)};`;
 
     sql:ExecutionResult|error result = check dbQueryRow(query);
 
@@ -84,7 +92,7 @@ function getUserDetails(string nic) returns UserDetails|error {
         UserDetails userDetails = {
             id: result["id"].toString(),
             name: result["name"].toString(),
-            address: result["land_id"].toString(),
+            address: result["address"].toString(),
             phone_no: result["phone_no"].toString()
             // gramadevision: result["gramadevision"].toString()
         };
@@ -102,22 +110,34 @@ function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
 
     // sql:ParameterizedQuery query = `SELECT u.name, u.land_id, u.id as nicNumber, s.id as certificateNo, s.id_check_status, s.address_check_status, s.police_check_status (SELECT * FROM "user" u JOIN "address" a ON u.land_id = a.land_id) WHERE LOWER(u.land_id) = ${string:toLowerAscii(gramaDevision)};`;
 
-    sql:ParameterizedQuery query = `SELECT r.name as name, r.land_id as address, r.nicNumber as nicNumber, s.id as certificateNo, s.id_check_status, s.address_check_status, s.police_check_status FROM (SELECT u.name as name, u.id as nicNumber, a.land_id as land_id, a.grama_division_no as gramadevision FROM "user" u JOIN "address" a ON u.land_id = a.land_id) r JOIN "status" s ON r.nicNumber = s.user_id WHERE LOWER(r.gramadevision) = ${string:toLowerAscii(gramaDevision)} ORDER BY s.id DESC;`;
+    sql:ParameterizedQuery query = `SELECT r.name as name, r.land_id as land_id, r.street_name as street_name, r.nicNumber as nicNumber, s.id as certificateNo, s.id_check_status, s.address_check_status, s.police_check_status FROM (SELECT u.name as name, u.id as nicNumber, a.land_no as land_id, a.grama_division_no as gramadevision, a.street_name as street_name FROM "user" u JOIN "address" a ON u.land_id = a.land_id) r JOIN "status" s ON r.nicNumber = s.user_id WHERE LOWER(r.gramadevision) = ${string:toLowerAscii(gramaDevision)} ORDER BY s.id DESC;`;
 
-    stream<StatusDetails, sql:Error?> result = check dbQueryUser(query);
+    stream<StatusDetails1, sql:Error?> result = check dbQueryUser(query);
 
     io:println("result: ", result);
 
     json[] statusDetails = [];
 
-    check from StatusDetails ent in result
+    check from StatusDetails1 ent in result
         do {
-            statusDetails.push(ent);
+            StatusDetails2 statusDetails2 = {
+                name: ent.name,
+                address: ent.land_id +  ", " + ent.street_name + ", Bambalapitiya, Colombo",
+                nicNumber: ent.nicNumber,
+                certificateNo: ent.certificateNo,
+                id_check_status: ent.id_check_status,
+                address_check_status: ent.address_check_status,
+                police_check_status: ent.police_check_status
+            };
+
+            statusDetails.push(statusDetails2);
         };
-    
-    // io:print(statusDetails);
+
+    io:print(statusDetails);
 
     return statusDetails;
-}
+            
+        };
+
 
 // SELECT u.name, u.address, u.id as user_id, s.id as status_id, s.id_check_status, s.address_check_status, s.police_check_status FROM "user" u JOIN "status" s ON u.id = s.user_id WHERE LOWER(u.gramadevision) = LOWER('Wellawatta');

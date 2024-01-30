@@ -61,12 +61,12 @@ function dbQueryStatus(sql:ParameterizedQuery query) returns stream<StatusRecord
 # 
 # + query - The query to execute.
 # + return - Stream of StatusDetails objects or error if any error occurred.
-function dbQueryUser(sql:ParameterizedQuery query) returns stream<StatusDetails, sql:Error?>|error {
+function dbQueryUser(sql:ParameterizedQuery query) returns stream<StatusDetails1, sql:Error?>|error {
     postgresql:Client dbClient = check new (host, username, password,
         db, port, connectionPool = {maxOpenConnections: 5}
     );
 
-    stream<StatusDetails, sql:Error?> result = dbClient->query(query);
+    stream<StatusDetails1, sql:Error?> result = dbClient->query(query);
 
     check dbClient.close();
 
