@@ -78,6 +78,7 @@ function getUserDetails(string nic) returns UserDetails|error {
     sql:ParameterizedQuery query = `SELECT u.id,
                                             u.name,
                                             u.phone_no, 
+                                            a.grama_division_no,
                                             CONCAT(a.land_no, ' ', a.street_name) as address
                                         FROM "user" u
                                         JOIN "address" a ON u.land_id = a.land_id
@@ -93,8 +94,8 @@ function getUserDetails(string nic) returns UserDetails|error {
             id: result["id"].toString(),
             name: result["name"].toString(),
             address: result["address"].toString(),
-            phone_no: result["phone_no"].toString()
-            // gramadevision: result["gramadevision"].toString()
+            phone_no: result["phone_no"].toString(),
+            grama_division_no: result["grama_division_no"].toString()
         };
         return userDetails;
     }
