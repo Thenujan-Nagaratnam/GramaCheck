@@ -39,3 +39,7 @@ type Message record {
     string message;
     string nic;
 };
+
+public type returnMessage record {|
+    string message;
+|};

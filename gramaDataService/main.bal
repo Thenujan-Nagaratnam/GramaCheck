@@ -1,4 +1,5 @@
 import ballerina/http;
+import ballerina/io;
 import ballerinax/postgresql.driver as _;
 
 service / on new http:Listener(3000) {
@@ -80,6 +81,8 @@ service / on new http:Listener(3000) {
         http:Response response = new;
         UserDetails|error results = trap getUserDetails(nic.nic);
 
+        io:println(results);
+
         if (results is error) {
             response.statusCode = 200;
             response.setPayload({status: "Error", description: "Something went wrong! please try again after some time"});
@@ -89,7 +92,6 @@ service / on new http:Listener(3000) {
             response.setHeader("Content-Type", "application/json");
             response.setPayload(respObj);
         }
-
         check caller->respond(response);
     }
 

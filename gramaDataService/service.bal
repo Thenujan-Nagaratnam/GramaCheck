@@ -23,6 +23,28 @@ VALUES (UPPER(${entry.nic}), ${entry.idCheckStatus}, ${entry.addressCheckStatus}
 
 }
 
+function getAllUsers(string nic) returns UserDetails|error {
+    // sql:ParameterizedQuery query = `SELECT * from "user" where LOWER(id) = ${string:toLowerAscii(nic)};`;
+
+    sql:ParameterizedQuery query = `SELECT * from "user";`;
+
+    sql:ExecutionResult|error result = check dbQueryRow(query);
+
+    //{"affectedRowCount":null,"lastInsertId":null,"phone_no":"1234567890","address":"123, Sample Street","name":"Alice","id":"123456789V"}
+    if (result is error) {
+        return result;
+    } else {
+        UserDetails userDetails = {
+            id: result["id"].toString(),
+            name: result["name"].toString(),
+            address: result["address"].toString(),
+            phone_no: result["phone_no"].toString(),
+            gramadevision: result["grama_division_no"].toString()
+        };
+        return userDetails;
+    }
+}
+
 # Update the Status of the Certificate
 # This is implemented for the Grama Niladhari to decide whether the certificate is approved or not
 #
@@ -123,7 +145,7 @@ function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
         do {
             StatusDetails2 statusDetails2 = {
                 name: ent.name,
-                address: ent.land_id +  ", " + ent.street_name + ", Bambalapitiya, Colombo",
+                address: ent.land_id + ", " + ent.street_name + ", Bambalapitiya, Colombo",
                 nicNumber: ent.nicNumber,
                 certificateNo: ent.certificateNo,
                 id_check_status: ent.id_check_status,
@@ -137,8 +159,7 @@ function getGramaDevisionUsers(string gramaDevision) returns json[]|error {
     io:print(statusDetails);
 
     return statusDetails;
-            
-        };
 
+};
 
 // SELECT u.name, u.address, u.id as user_id, s.id as status_id, s.id_check_status, s.address_check_status, s.police_check_status FROM "user" u JOIN "status" s ON u.id = s.user_id WHERE LOWER(u.gramadevision) = LOWER('Wellawatta');

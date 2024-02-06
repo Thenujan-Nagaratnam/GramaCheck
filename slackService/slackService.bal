@@ -28,7 +28,7 @@ service / on new http:Listener(7070) {
     #
     # Example:
     # post /sendNotifications/{"Hello, World!"}
-    resource function post sendNotifications(@http:Payload Message message) returns string|error|NotificationError {
+    resource function post sendNotifications(@http:Payload Message message) returns returnMessage|error|NotificationError {
 
         //The message
         slack:Message messageToSend = {
@@ -48,8 +48,13 @@ service / on new http:Listener(7070) {
             return notificationError;
         }
 
-        return "Successfully sent the notification!";
+        returnMessage return_message = {
+            message: "Successfully sent the notification!"
+        };
+
+        return return_message;
 
     }
+
 }
 
